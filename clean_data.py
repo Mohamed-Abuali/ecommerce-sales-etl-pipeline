@@ -16,17 +16,15 @@ def read_data():
 def fix_price_formula(data):
     data["Price"] = data["Price"].str.replace(r'[a-zA-Z]+', "0",regex=True)
     data["Price"] = data["Price"].str.replace("$", "")
-    # data["Price"] = pd.to_numeric(data["Price"], errors="coerce")
-    # data["Price"] = data["Price"].fillna(0)
-    print(data["Quantity"].dtype)
-    #print(data[(data["Product"] == "Smartphone") & (data["Quantity"] >= 2)])
+    data["Price"] = pd.to_numeric(data["Price"], errors="coerce")
+    data["Price"] = data["Price"].fillna(0)
     return data
 def  clean_quantity(data):
-    return    
-def total_missing_data(data):
-    df = pd.read_sql("SELECT * FROM sales", engine)
     
-    return 
+    return data
+def total_missing_data(data):
+    data["Total"] = (data["Quantity"] * data["Price"]).fillna(0)
+    return data
 def fix_data_types(data):
     data["Quantity"] = pd.to_numeric(data["Quantity"], errors="coerce")
     data["Quantity"] = data["Quantity"].fillna(0)
