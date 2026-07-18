@@ -9,7 +9,6 @@ df = read_data()
 # fix_price_formula(df)
 # clean_quantity(df)
 # total_missing_data(df)
-# fix_product_missing(df)
 fix_category_missing(df)
 
 

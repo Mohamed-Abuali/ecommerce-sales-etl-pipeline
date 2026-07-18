@@ -22,8 +22,10 @@ def  clean_quantity(data):
     return    
 def total_missing_data(data):
     return
-def fix_product_missing(data):
-    return
+
+
+
+
 def fix_category_missing(data):
     df = pd.read_sql("SELECT * FROM sales", engine)
     #filter the category
@@ -36,13 +38,13 @@ def fix_category_missing(data):
     #filter the product
     product  = pd.Series(df["Product"].unique())
 
-    print(filtered_cat)
+    #print(filtered_cat)
     #assign the missing category
     for category, products in product_categories.items():
         df.loc[df['Product'].isin(products), 'Category'] = category
 
     df.to_sql("sales", engine, if_exists="replace", index=False)
-    print(pd.read_sql("SELECT * FROM sales", engine))
+    #print(pd.read_sql("SELECT * FROM sales", engine))
     return df
 
 def fix_date_formula(data):
