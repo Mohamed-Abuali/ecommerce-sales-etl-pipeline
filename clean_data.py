@@ -33,22 +33,26 @@ def fix_category_missing(data):
     'electronics',
     'sports']
     filtered_cat = cat[~cat.isin(exclude_list)].dropna()
+    #filter the product
+    product  = pd.Series(df["Product"].unique())
+
+    print(filtered_cat)
     #assign the missing category
-    with engine.connect() as conn:
-        conn.execute(text("""
-        UPDATE sales
-        SET Category = CASE
-            WHEN product  IN ("Smartphone", "Laptop", "Tablet", "Camera","Smartwatch","Headphones") THEN "Electronics"
-            WHEN product  IN ("Vacuum","Blender","Lamp") THEN "Home"
-            ELSE Category
-        END;
-        """))
-        conn.commit()
-    df = pd.read_sql("SELECT * FROM sales", engine)
-    print(cat)
+    for category, products in product_categories.items():
+        df.loc[df['Product'].isin(products), 'Category'] = category
+
+    df.to_sql("sales", engine, if_exists="replace", index=False)
+    print(pd.read_sql("SELECT * FROM sales", engine))
     return df
 
 def fix_date_formula(data):
     return
 
 
+product_categories = {
+    "Home": ["Blender", "Microwave", "Vacuum", "Lamp"],
+    "Electronics": ["Smartphone", "Smartwatch", "Headphones", "Laptop"],
+    "Sports": ["Tennis Racket", "Basketball", "Yoga Mat", "Football"],
+    "Books": ["Science", "Biography", "Comics", "Fiction"],
+    "Clothing": ["Shoes", "T-shirt", "Jacket", "shoes", "Jeans"]
+}
