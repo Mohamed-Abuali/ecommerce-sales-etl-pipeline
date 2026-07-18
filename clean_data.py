@@ -26,7 +26,14 @@ def fix_product_missing(data):
     return
 def fix_category_missing(data):
     df = pd.read_sql("SELECT * FROM sales", engine)
-    cat= df ["Category"].unique()
+    #filter the category
+    cat= pd.Series(df["Category"].unique())
+    exclude_list = ['electronic',
+    'ELECTRONICS',
+    'electronics',
+    'sports']
+    filtered_cat = cat[~cat.isin(exclude_list)].dropna()
+    #assign the missing category
     with engine.connect() as conn:
         conn.execute(text("""
         UPDATE sales
