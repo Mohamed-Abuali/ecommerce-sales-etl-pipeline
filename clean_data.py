@@ -8,26 +8,35 @@ def read_data():
     df = pd.read_sql("SELECT * FROM sales", engine)
     df.rename(columns={" Category": "Category"}, inplace=True)
     df.to_sql("sales", engine, if_exists="replace", index=False)
-    print(df[df["Category"].isnull()])
+    #print(df[df["Category"].isnull()])
     return df
 
 
 
 def fix_price_formula(data):
-    data["Price"] = data["Price"].str.replace(r'[a-zA-Z]+', "Null",regex=True)
+    data["Price"] = data["Price"].str.replace(r'[a-zA-Z]+', "0",regex=True)
     data["Price"] = data["Price"].str.replace("$", "")
-    print(data["Price"].head())
-    return
+    # data["Price"] = pd.to_numeric(data["Price"], errors="coerce")
+    # data["Price"] = data["Price"].fillna(0)
+    print(data["Quantity"].dtype)
+    #print(data[(data["Product"] == "Smartphone") & (data["Quantity"] >= 2)])
+    return data
 def  clean_quantity(data):
     return    
 def total_missing_data(data):
-    return
-
+    df = pd.read_sql("SELECT * FROM sales", engine)
+    
+    return 
+def fix_data_types(data):
+    data["Quantity"] = pd.to_numeric(data["Quantity"], errors="coerce")
+    data["Quantity"] = data["Quantity"].fillna(0)
+    data["Quantity"] = data["Quantity"].astype(int)
+    return data
 
 
 
 def fix_category_missing(data):
-    df = pd.read_sql("SELECT * FROM sales", engine)
+    df = data
     #filter the category
     cat= pd.Series(df["Category"].unique())
     exclude_list = ['electronic',
