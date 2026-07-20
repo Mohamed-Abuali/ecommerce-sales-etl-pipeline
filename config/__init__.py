@@ -1,0 +1,1 @@
+# Configuration module for ecommerce data processing pipeline
